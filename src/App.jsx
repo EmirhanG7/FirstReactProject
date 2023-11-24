@@ -8,28 +8,21 @@ function App() {
   const [products, setProducts] = useState([])
   const [basket, setBasket] = useState([])
 
+  let productList = [];
+  
+  
   useEffect(() => {
-
-
-    setProducts(
-      [
-        {
-          id: 1,
-          name: 'Ayakkabı',
-          price: 100
-        },
-        {
-          id: 2,
-          name: 'Pantolon',
-          price: 150
-        },
-        {
-          id: 3,
-          name: 'Gömlek',
-          price: 130
-        },
-      ]
-    );
+    
+    async function fetchData() {
+      const fetchProducts = await fetch('https://dummyjson.com/products').then(x => x.json())
+      productList = fetchProducts.products
+      console.log(productList)
+      setProducts(
+        [...productList]
+      );
+    }
+          
+    fetchData();
 
   }, []);
 
@@ -40,16 +33,16 @@ function App() {
       const foundItem = currentBasket.find(x => x.productId === product.id) || null;
   
       if(foundItem !== null) {
-        foundItem.quantity++;
+        foundItem.stock++;
         return [...currentBasket];
 
       }
 
 
       const newBasketItem = {
-        name: product.name,
+        title: product.title,
         productId: product.id,
-        quantity: 1,
+        stock: 1,
         price: product.price
       }
       return [...currentBasket, newBasketItem];
